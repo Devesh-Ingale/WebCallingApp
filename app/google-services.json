@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "537496689467",
+    "project_id": "webcallingapp",
+    "storage_bucket": "webcallingapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537496689467:android:32d785784e44ef3c2f351e",
+        "android_client_info": {
+          "package_name": "dev.devlopment.webcallingapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDllnX22K-nc1D8Wknn-Xi8PDw3JNiG5VU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
