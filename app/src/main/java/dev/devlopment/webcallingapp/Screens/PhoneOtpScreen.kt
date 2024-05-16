@@ -72,7 +72,6 @@ import dev.devlopment.webcallingapp.ui.theme.unfocusedTextFieldText
 @Composable
 fun PhoneOtpScreen(
     authViewModel: AuthViewModel,
-    OnNavigateToSignUp: () -> Unit,
     onOtpSuccess: () -> Unit
 ) {
     var PhoneNumber by remember { mutableStateOf("") }
@@ -203,7 +202,11 @@ fun PhoneOtpScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(40.dp),
-                    onClick = { authViewModel.verifyOTP(Otp) },
+                    onClick = { authViewModel.verifyOTP(Otp)
+                        if (authViewModel.saveUser()){
+                              onOtpSuccess()
+                        }
+                              },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (isSystemInDarkTheme()) BlueGray else Black,
                         contentColor = Color.White
@@ -218,53 +221,10 @@ fun PhoneOtpScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))  // Add Spacer for spacing
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 30.dp)
-                ) {
-                    // Existing TextField components...
 
-
-                    Spacer(modifier = Modifier.height(20.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight(fraction = 0.8f)
-                            .fillMaxWidth()
-                            .clickable { OnNavigateToSignUp() },
-                        contentAlignment = Alignment.BottomCenter
-                    ) {
-                        Text(
-                            buildAnnotatedString {
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = Color(0xFF94A3B8),
-                                        fontSize = 14.sp,
-                                        fontFamily = Roboto,
-                                        fontWeight = FontWeight.Normal
-                                    )
-                                ) {
-                                    append("Don't have Account?")
-                                }
-                                withStyle(
-                                    style = SpanStyle(
-                                        color = uiColor,
-                                        fontSize = 14.sp,
-                                        fontFamily = Roboto,
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                ) {
-                                    append(" ")
-                                    append("Sign up")
-                                }
-                            }
-                        )
-                    }
                 }
 
 
-            }
         }
     }
 }

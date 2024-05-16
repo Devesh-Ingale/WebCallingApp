@@ -1,6 +1,7 @@
 package dev.devlopment.webcallingapp.Repository
 
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,10 +26,10 @@ class UserRepository(
         }
     }
 
-    suspend fun signUp(email: String, password: String, firstName: String, lastName: String, phoneNumber: String): Result<Boolean> =
+    suspend fun signUp(email: String, password: String, firstName: String, location: String, phoneNumber: String): Result<Boolean> =
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
-            val user = User(firstName, lastName, email, phoneNumber)
+            val user = User(firstName, location, email, phoneNumber)
             saveUserToFirestore(user)
             Result.Success(true)
         } catch (e: Exception) {
@@ -46,6 +47,7 @@ class UserRepository(
             null
         }
     }
+
 
     suspend fun login(email: String, password: String): Result<Boolean> =
         try {
@@ -72,7 +74,7 @@ class UserRepository(
     }
 
     fun sendOTP(phoneNumber: String, callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks) {
-       var number = phoneNumber.trim()
+       var number = phoneNumber
         if (number.isNotEmpty()){
             if (number.length == 10){
                 number = "+91$number"
@@ -105,6 +107,20 @@ class UserRepository(
             PhoneAuthProvider.verifyPhoneNumber(options)
         }
     }
+    suspend fun getCurrentUser2(): User? {
+        val firebaseUser = auth.currentUser
+        return if (firebaseUser != null) {
+            try {
+                val documentSnapshot = firestore.collection("users").document(firebaseUser.email!!).get().await()
+                documentSnapshot.toObject(User::class.java)
+            } catch (e: Exception) {
+                null
+            }
+        } else {
+            null
+        }
+    }
+
 
 }
 

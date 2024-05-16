@@ -83,18 +83,6 @@ fun LoginScreen(
     val result2 by authViewModel.forgotPasswordResult.observeAsState()
 
 
-    fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success
-                    onLoginSuccess()
-                } else {
-                    // Handle sign in failure
-                }
-            }
-    }
 
 
 

@@ -3,9 +3,9 @@ package dev.devlopment.webcallingapp.Repository
 
 data class User(
     val firstName: String = "",
-    val lastName: String = "",
+    val location: String = "",
     val email: String = "",
-    val PhoneNumber: String = ""
+    val phonenumber: String = ""
 )
 
 

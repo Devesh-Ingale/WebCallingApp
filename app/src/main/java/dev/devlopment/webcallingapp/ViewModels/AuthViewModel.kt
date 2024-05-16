@@ -1,5 +1,7 @@
 package dev.devlopment.webcallingapp.ViewModels
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,11 +10,11 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
 import dev.devlopment.webcallingapp.MainAndUtils.Injection
 import dev.devlopment.webcallingapp.MainAndUtils.SharedPreferencesManager
 import dev.devlopment.webcallingapp.Repository.UserRepository
 import dev.devlopment.webcallingapp.Repository.Result
+import dev.devlopment.webcallingapp.Repository.User
 import kotlinx.coroutines.launch
 
 class AuthViewModel : ViewModel() {
@@ -51,9 +53,9 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun signUp(email: String, password: String, firstName: String, lastName: String, phoneNumber: String) {
+    fun signUp(email: String, password: String, firstName: String, location: String, phoneNumber: String) {
         viewModelScope.launch {
-            _authResult.value = userRepository.signUp(email, password, firstName, lastName, phoneNumber)
+            _authResult.value = userRepository.signUp(email, password, firstName, location, phoneNumber)
             if (_authResult.value is Result.Success) {
                 _loggedIn.value = true
                 // User signed up successfully, now verify OTP
@@ -136,6 +138,7 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             userRepository.verifyOTP(otp,
                 onVerificationComplete = {
+                    _otpVerificationResult.value=Result.Success(true)
                     // Verification successful, now save the user
                     saveUser()
 
@@ -161,18 +164,18 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun saveUser() {
+    fun saveUser():Boolean {
         // Fetch user details from UserRepository or SharedPreferences
         // and save them to Firestore
         val user = userRepository.getCurrentUser()
         if (user != null) {
             viewModelScope.launch {
-                userRepository.saveUserToFirestore(user)
                 _loggedIn.value = true // Set logged-in status to true
             }
         } else {
             _authResult.value = Result.Error(Exception("Failed to save user"))
         }
+        return true
     }
 
     // Function to log out the user
@@ -180,6 +183,26 @@ class AuthViewModel : ViewModel() {
         SharedPreferencesManager.clearAll() // Clear SharedPreferences
         SharedPreferencesManager.saveBoolean("isLoggedIn", false) // Update login status
         _loggedIn.value = false // Set logged-in status to false
+    }
+
+    private val _userProfile = MutableLiveData<User?>()
+    val userProfile: MutableLiveData<User?> get() = _userProfile
+
+    fun fetchUserProfile() {
+        viewModelScope.launch {
+            try {
+                val user = userRepository.getCurrentUser2()
+                if (user != null) {
+                    _userProfile.value = user
+                } else {
+                    // Handle case when user data is null
+                    Log.e(TAG, "User data is null")
+                }
+            } catch (e: Exception) {
+                // Handle error when fetching user data
+                Log.e(TAG, "Error fetching user data: ${e.message}", e)
+            }
+        }
     }
 
 }

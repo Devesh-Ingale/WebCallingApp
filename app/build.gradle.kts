@@ -62,6 +62,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.2")
 
+    //google location
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    //google maps
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

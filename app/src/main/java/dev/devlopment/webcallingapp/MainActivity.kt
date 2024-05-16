@@ -19,6 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import dev.devlopment.chater.Navigations.NavigationGraph
 import dev.devlopment.webcallingapp.ViewModels.AuthViewModel
+import dev.devlopment.webcallingapp.ViewModels.LocationViewModel
 import dev.devlopment.webcallingapp.ui.theme.WebCallingAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,12 +30,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController= rememberNavController()
             val authViewModel: AuthViewModel = viewModel()
+            val locationViewModel: LocationViewModel = viewModel()
             WebCallingAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavigationGraph(navController = navController, authViewModel = authViewModel)
+                    NavigationGraph(navController = navController, authViewModel = authViewModel, locationViewModel = locationViewModel)
                 }
             }
         }

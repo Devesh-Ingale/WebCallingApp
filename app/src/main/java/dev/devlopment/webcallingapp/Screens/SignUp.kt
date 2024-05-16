@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -44,8 +45,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import dev.devlopment.webcallingapp.R
 import dev.devlopment.webcallingapp.ViewModels.AuthViewModel
+import dev.devlopment.webcallingapp.ViewModels.LocationViewModel
 import dev.devlopment.webcallingapp.ui.theme.Black
 import dev.devlopment.webcallingapp.ui.theme.BlueGray
 import dev.devlopment.webcallingapp.ui.theme.Roboto
@@ -59,14 +62,18 @@ import dev.devlopment.webcallingapp.ui.theme.unfocusedTextFieldText
 fun SignUpScreen(
     authViewModel: AuthViewModel,
     onNavigateToLogin: () -> Unit,
-    onNavigateToOTP: () -> Unit
+    onNavigateToOTP: () -> Unit,
+    onNavigateTolocation: () -> Unit,
+    locationViewModel: LocationViewModel
 ){
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    location = locationViewModel.address
+
 
     Surface {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -197,11 +204,11 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.height(15.dp))
 
                 TextField(modifier = Modifier.fillMaxWidth(),
-                    value = lastName,
-                    onValueChange = { lastName = it },
+                    value = location,
+                    onValueChange = { location = it },
                     label = {
                         Text(
-                            text = "LastName",
+                            text = "Location",
                             style = MaterialTheme.typography.labelMedium,
                             color = uiColor
                         )
@@ -211,7 +218,16 @@ fun SignUpScreen(
                         focusedPlaceholderColor = MaterialTheme.colorScheme.focusedTextFieldText,
                         unfocusedContainerColor = MaterialTheme.colorScheme.textFieldContainer,
                         focusedContainerColor = MaterialTheme.colorScheme.textFieldContainer
-                    )
+                    ),
+                    trailingIcon = {
+                        TextButton(onClick = { onNavigateTolocation() }) {
+                            Text(
+                                text = "get Location",
+                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
+                                color = uiColor
+                            )
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(15.dp))
 
@@ -242,11 +258,11 @@ fun SignUpScreen(
                         .height(40.dp),
                     onClick = {
                         onNavigateToOTP()
-                        authViewModel.signUp(email, password, firstName, lastName,phoneNumber)
+                        authViewModel.signUp(email, password, firstName, location,phoneNumber)
                         email = ""
                         password = ""
                         firstName = ""
-                        lastName = ""
+                        location = ""
                         phoneNumber = ""
                     },
                     colors = ButtonDefaults.buttonColors(
@@ -299,3 +315,4 @@ fun SignUpScreen(
         }
     }
 }
+

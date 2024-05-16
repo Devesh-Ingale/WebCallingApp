@@ -14,6 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -31,19 +34,29 @@ import dev.devlopment.webcallingapp.ViewModels.AuthViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Profile(viewModel: AuthViewModel){
-    Column(
+fun Profile(viewModel: AuthViewModel,onNavigateToLogin:()->Unit){
+
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserProfile()
+    }
+
+    val userProfile by viewModel.userProfile.observeAsState()
+    userProfile?.let { user->
+        Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(color = Color(android.graphics.Color.parseColor("#f2f1f6"))),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ConstraintLayout(modifier = Modifier
-            .height(250.dp)
-            .background(color = Color(android.graphics.Color.parseColor("#32357a")))) {
-            val (topImg,pofile,title,back,pen)=createRefs()
-            Image(painter = painterResource(id = R.drawable.arc_3), contentDescription =null,
+        ConstraintLayout(
+            modifier = Modifier
+                .height(250.dp)
+                .background(color = Color(android.graphics.Color.parseColor("#32357a")))
+        ) {
+            val (topImg, pofile, title, back, pen) = createRefs()
+            Image(painter = painterResource(id = R.drawable.arc_3), contentDescription = null,
                 Modifier
                     .fillMaxWidth()
                     .constrainAs(topImg) {
@@ -51,7 +64,7 @@ fun Profile(viewModel: AuthViewModel){
                     }
             )
 
-            Image(painter = painterResource(id = R.drawable.user_2), contentDescription =null,
+            Image(painter = painterResource(id = R.drawable.user_2), contentDescription = null,
                 Modifier
                     .fillMaxWidth()
                     .constrainAs(pofile) {
@@ -61,45 +74,50 @@ fun Profile(viewModel: AuthViewModel){
                     }
             )
             Text(text = "Profile",
-                style = TextStyle(Color.White,
-                    fontSize = 30.sp),
-                modifier = Modifier.constrainAs(title){
+                style = TextStyle(
+                    Color.White,
+                    fontSize = 30.sp
+                ),
+                modifier = Modifier.constrainAs(title) {
                     top.linkTo(parent.top, margin = 32.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
             )
         }
-        Text(text = "Devesh Ingale",
+        Text(
+            text = user.firstName,
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp),
             color = Color(android.graphics.Color.parseColor("#32357a"))
         )
-        Text(text = "deveshingale05@gmail.com",
+        Text(
+            text = user.email,
             fontSize = 18.sp,
             color = Color(android.graphics.Color.parseColor("#747679"))
         )
 
-       LazyColumn {
-
-       }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_1), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_1), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
-               ) {
-                Text(text = "notification",
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
+            ) {
+                Text(
+                    text = "notification",
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -119,22 +137,26 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_2), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_2), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
             ) {
-                Text(text = "Calender",
+                Text(
+                    text = "Calender",
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -154,22 +176,26 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_3), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_3), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
             ) {
-                Text(text = "Location",
+                Text(
+                    text = user.location.trim(),
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -189,22 +215,26 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_4), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_4), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
             ) {
-                Text(text = "Contacts",
+                Text(
+                    text = "Contacts",
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -224,22 +254,26 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_5), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_5), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
             ) {
-                Text(text = "Phone",
+                Text(
+                    text = user.phonenumber,
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -259,23 +293,30 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
-            .height(55.dp),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, end = 32.dp, top = 10.dp, bottom = 10.dp)
+                .height(55.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
-                Image(painter = painterResource(id = R.drawable.btn_6), contentDescription = null,
-                    modifier =Modifier.padding(end = 5.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.btn_6), contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
                 )
             }
-            Column(modifier = Modifier
-                .padding(start = 16.dp)
-                .weight(1f)
-                .clickable { viewModel.logout() },
+            Column(
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f)
+                    .clickable {
+                        viewModel.logout()
+                        onNavigateToLogin()
+                    },
             ) {
-                Text(text = "Logout",
+                Text(
+                    text = "Logout",
                     color = Color.Black,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
@@ -284,15 +325,12 @@ fun Profile(viewModel: AuthViewModel){
 
 
         }
+    } }
 
 
 
-    }
+
+
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun ProfilePreview() {
-    Profile(AuthViewModel())
-}
